@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# 🛒 ShopHub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React e-commerce practice app with product browsing, category filtering, sorting, a persistent shopping cart, and token-based authentication.
 
-## Available Scripts
+**Live demo:** [shopping-app-zgm1-chi.vercel.app](https://shopping-app-zgm1-chi.vercel.app/)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🔐 **Authentication** — login via the ReqRes API, with a protected-route system so shop pages require a valid session
+- 🛍️ **Product catalog** — live product data from the FakeStoreAPI
+- 🗂️ **Category filtering** — browse Electronics, Jewelery, Men's Clothing, Women's Clothing
+- ↕️ **Sorting** — view products sorted by price
+- 🛒 **Shopping cart** — add, remove, and adjust quantities, powered by React Context so it's shared across every page
+- 🚪 **Logout** — clears the session and cart, redirects back to login
+- 📱 **Responsive layout** — sticky header/footer, adapts down to mobile
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech stack
 
-### `npm test`
+- React (Create React App)
+- React Router
+- React Context API (`CartContext`, `AuthContext`)
+- Axios / Fetch
+- [FakeStoreAPI](https://fakestoreapi.com/) — product data
+- [ReqRes](https://reqres.in/) — login/authentication
+- Deployed on [Vercel](https://vercel.com/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Demo login
 
-### `npm run build`
+This app authenticates against ReqRes's test endpoint. Use:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+Email:    eve.holt@reqres.in
+Password: cityslicka
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Getting started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+git clone <your-repo-url>
+cd shophub
+npm install
+npm start
+```
 
-### `npm run eject`
+The app runs at `http://localhost:3000`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Environment notes
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The ReqRes API now requires a free `x-api-key` header on every request. Sign up at [app.reqres.in/api-keys](https://app.reqres.in/api-keys) to get one, then set it in `src/components/Login.js`:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```javascript
+const API_KEY = "YOUR_REQRES_API_KEY";
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Deployment
 
-## Learn More
+This project auto-deploys to Vercel on every push to `main` via the GitHub integration — no manual deploy step needed. Preview deployments are generated automatically for other branches and pull requests.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/
+│   ├── Header.js
+│   ├── Footer.js
+│   ├── Home.js
+│   ├── Login.js
+│   ├── Category.js
+│   ├── Filter.js
+│   ├── Sort.js
+│   ├── Product.js
+│   ├── Product_Info.js
+│   ├── Cart.js
+│   └── ProtectedRoute.js
+├── context/
+│   ├── CartContext.js
+│   └── AuthContext.js
+└── style/
+    └── App.css
+```
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Built as a React practice project — routing, Context API state management, protected routes, and third-party API integration.
