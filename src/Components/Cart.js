@@ -1,34 +1,50 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import "../style/App.css";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import Category from "./Category";
 
 function Cart() {
-  const [product, setProduct] = useState([]);
-
-  useEffect(() => {
-    axios.get(`https://fakestoreapi.com/products/5`).then((Response) => {
-      console.log(Response.data);
-      setProduct(Response.data);
-      console.log(setProduct);
-    });
-  }, []);
+  const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <div className="details">
-        <div className="img2">
-          <img alt="#" className="product_img" src={product.image} />
-        </div>
-
-        <div className="description">
-          <h4>{product?.title}</h4>
-          <h6>{`price($) : ${product?.price}`}</h6>
-          <h4>{`category : ${product?.category}`}</h4>
-          <h4>{`Description : ${product?.description}`}</h4>
-        </div>
+      <Category />
+      <div style={{ flex: 1, padding: '20px' }}>
+        {cartItems.length === 0 ? (
+          <div className="empty-cart">
+            <p>Your cart is empty.</p>
+            <Link to="/Home" className="nav-link">Continue shopping →</Link>
+          </div>
+        ) : (
+          <div className="cart-page">
+            {cartItems.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <img className="cart-item-img" src={item.image} alt="#" />
+                <div className="cart-item-info">
+                  <h6>{item.title}</h6>
+                  <p>{`price($) : ${item.price}`}</p>
+                  <div className="qty-controls">
+                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                  </div>
+                  <p>{`Subtotal : $${(item.price * item.quantity).toFixed(2)}`}</p>
+                  <button className="remove-btn" onClick={() => removeFromCart(item.id)}>
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+            <div className="cart-summary">
+              <p className="cart-total">{`Total : $${cartTotal.toFixed(2)}`}</p>
+              <button className="addtocart" onClick={clearCart}>Clear Cart</button>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </div>

@@ -15,12 +15,14 @@ function Home() {
    }
 
   return (
-   <>
-    <div className='header'><Header/></div>
-    <div className='category'><Category/></div>
-    <div className='product'> <Product handleclick={handleclick}/></div>
-    <div className='footer'><Footer/></div>
-   </>
+   <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Header/>
+    <div style={{ flex: 1 }}>
+      <Category/>
+      <Product handleclick={handleclick}/>
+    </div>
+    <Footer/>
+   </div>
   );
 }
 

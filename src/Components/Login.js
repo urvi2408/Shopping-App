@@ -1,61 +1,104 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../style/App.css";
+import { useAuth } from "../context/AuthContext";
+
+const API_KEY = "free_user_3HnpFcx67Uzsayd8ot8aDoEwN0d"; // from https://app.reqres.in/api-keys
 
 function Login() {
-  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
-  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  // Hardcoded credentials
   const credentials = {
-    username: "eve.holt@reqres.in",
+    email: "eve.holt@reqres.in",
     password: "cityslicka",
   };
 
-  const onsubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
+    setError("");
+
     fetch("https://reqres.in/api/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+      body: JSON.stringify({ email, password }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
+      .then(async (response) => {
+        const data = await response.json();
+        if (response.ok && data.token) {
+          login(data.token);
           navigate("/Home");
         } else {
-          <p>incorrect information</p>;
+          setError(data.error || "Incorrect email or password");
         }
-        setData(data);
       })
-      .catch((error) => console.error("Login failed:", error));
+      .catch((err) => {
+        console.error("Login failed:", err);
+        setError("Something went wrong. Please try again.");
+      });
+  };
+
+
+  const handleUseSuggested = () => {
+    setEmail(credentials.email);
+    setPassWord(credentials.password);
+    setError("");
   };
 
   return (
-    <div className="login">
-      <form onsubmit={onsubmit}>
-        <h2>Login</h2>
-        <input
-          type="text"
-          placeholder="enter your username"
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-        <br />
-        <br />
-        <input
-          type="password"
-          placeholder="enter your password"
-          value={password}
-          onChange={(e) => setPassWord(e.target.value)}
-        />
-        <br />
-        <br />
-        <button onClick={onsubmit}>Login</button>
-      </form>
+    <div className="login-page">
+      <div className="login-container">
+        <form onSubmit={onSubmit} className="login-form">
+          <h2 className="login-title">Welcome Back</h2>
+          <p className="login-subtitle">Login to your account</p>
 
-      <p>{data.token}</p>
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassWord(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && <p className="login-error">{error}</p>}
+
+          <button type="submit" className="login-btn">Login</button>
+
+          <div className="credentials-suggestion">
+            <p className="suggestion-text">Demo Credentials:</p>
+            <div className="credentials-box">
+              <p><strong>Email:</strong> {credentials.email}</p>
+              <p><strong>Password:</strong> {credentials.password}</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleUseSuggested}
+              className="use-credentials-btn"
+            >
+              Use Demo Credentials
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

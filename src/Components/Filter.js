@@ -1,69 +1,58 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import "../style/App.css";
-import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useCart } from "../context/CartContext";
+import Category from "./Category";
 
 const Filter = () => {
-  const { category } = useParams([]);
-
+  const { category } = useParams();
   const [data, setData] = useState([]);
-  const [cart, setCart] = useState([]);
-
-  const handleclick = (product) => {
-    if (cart.indexOf(product) !== -1) return alert("already added");
-    // setCart([...cart,product])
-    cart.push(product);
-    console.log(cart);
-  };
+  const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`https://fakestoreapi.com/products/category/${category}`)
       .then((response) => {
         setData(response.data);
-      });
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [category]);
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <div className="product_container">
-        {data &&
-          data.length > 0 &&
-          data.map((product) => {
-            return (
-              <div className="card">
+      <div style={{ flex: 1 }}>
+        <Category />
+        {loading && <p className="loading-text">Loading...</p>}
+        <div className="product_container">
+          {!loading && data && data.length > 0 &&
+            data.map((product) => (
+              <div className="card" key={product.id}>
                 <div>
                   <Link to={`${product.id}`}>
-                    <img
-                      id={product.id}
-                      className="img"
-                      src={product?.image}
-                      alt="#"
-                    />
+                    <img id={product.id} className="img" src={product?.image} alt="#" />
                   </Link>
                 </div>
                 <div className="card_info">
                   <h6>{product?.title}</h6>
                   <h6>{`price($) : ${product?.price}`}</h6>
                   <h6>{`category : ${product?.category}`}</h6>
-                  <button
-                    onClick={() => handleclick(product)}
-                    className="addtocart"
-                    handleclick={handleclick}
-                  >
+                  <button onClick={() => addToCart(product)} className="addtocart">
                     ADD TO CART
                   </button>
                 </div>
               </div>
-            );
-          })}
-      </div>{" "}
+            ))}
+        </div>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
