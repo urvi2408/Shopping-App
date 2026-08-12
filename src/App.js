@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from './Components/Home';
 import Cart from './Components/Cart';
-import Product_Info from './Components/Product_Info';
+import Product_Info from './Components/ProductInfo';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Filter from './Components/Filter';
 import Login from './Components/Login';
