@@ -7,7 +7,7 @@ import '../style/App.css';
 import { useCart } from '../context/CartContext';
 import Category from './Category';
 
-function Product_Info() {
+function ProductInfo() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,4 +48,4 @@ function Product_Info() {
   );
 }
 
-export default Product_Info;
+export default ProductInfo;
